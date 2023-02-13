@@ -227,7 +227,6 @@ class MultiVAE(object):
         return saver, logits, self.loss1, merged
 
     def forward_pass(self):
-        # 隐式反馈部分
         # q-network
         self.alpha = None
         h = tf.nn.l2_normalize(self.input_ph, 1)
@@ -238,9 +237,6 @@ class MultiVAE(object):
             if i != len(self.weights_q) - 1:
                 h = tf.nn.tanh(h)
             else:
-                # self.alpha = tf.nn.softplus(h[:, :self.q_dims[-1]])
-                # # self.alpha = h
-
                 mu_q = h[:, :self.q_dims[-1]]
                 logvar_q = h[:, self.q_dims[-1]:]
 
@@ -253,38 +249,13 @@ class MultiVAE(object):
         self.theta = tf.nn.softmax(self.sampled_z / self.temp, dim=-1)
         # self.theta = tf.nn.softmax(mu_q / self.temp, dim=-1)
         self.z = self.sampled_z
-        # self.z = tf.nn.softmax(self.sampled_z, dim=-1)
-
-        # self.alpha = tf.layers.batch_normalization(self.alpha)
-        # self.alpha = tf.maximum(1e-6, tf.log(1. + tf.exp(self.alpha)))
-        # gamma = args.prior * tf.ones_like(self.alpha)
-        # pst_dist = tf.distributions.Dirichlet(self.alpha)
-        # pri_dist = tf.distributions.Dirichlet(gamma)
-        #
-        # mean_z = pst_dist.mean()
-        # self.sampled_z = pst_dist.sample()
-        # # self.z = self.sampled_z
-        # self.z = self.alpha
-        # # self.z = self.alpha/(tf.reduce_sum(self.alpha, axis=1, keep_dims=True) + 1e-10)
-        # # self.z = tf.nn.softmax(self.alpha, dim=-1)
-        # # self.theta = self.is_training_ph * self.sampled_z + (1 - self.is_training_ph) * mean_z
-        # self.theta = mean_z
-        # KL = tf.reduce_mean(pst_dist.kl_divergence(pri_dist), -1)
-        # # KL = tf.constant(0, dtype=tf.float32)
 
         # p-network
-        # self.beta_norm = tf.nn.softplus(tf.layers.batch_normalization(self.beta))
-        # logits = tf.matmul(self.z, tf.nn.softmax(self.beta, dim=-1), transpose_b=False) / 1
         logits = tf.matmul(self.z, self.beta, transpose_b=False) / 1
 
-        # 三种Phi学习方式，前两种是利用第一层VAE去学习表征，分带有NORM和不带的，第三种是直接自定义随即向量
         # self.phi = tf.nn.softmax(tf.layers.batch_normalization(tf.layers.dense(self.weights_q[0], self.q_dims[-1], name='dense'),
         #                center=True, scale=False, training=self.is_training, trainable=True, name='phi') / self.temp)
         self.phi = tf.nn.softmax((tf.layers.dense(self.weights_q[0], self.q_dims[-1], name='dense')) / self.temp)
-        # self.phi = tf.nn.softmax(tf.get_variable(name="phi", shape=[self.q_dims[0], self.q_dims[-1]], initializer=tf.keras.initializers.glorot_normal(seed=self.random_seed)) / self.temp)
-
-        # 显式反馈部分
-        # rating, kl_k, rating_kloss = tf.constant(0, dtype=tf.float32), tf.constant(0, dtype=tf.float32), tf.constant(0, dtype=tf.float32)
 
         self.topk_intent = tf.nn.top_k(self.theta, k=self.n_intent)
         # self.phiT = tf.transpose(self.phi)
