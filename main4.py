@@ -394,11 +394,11 @@ params = Params()
 # train_data = np.concatenate((train_data, test_data_tr), axis=0)
 # n_users, n_items = np.max(np.concatenate((train_data, test_data), axis=0), axis=0) + 1
 
-vad_csv = pd.read_csv("data/ex_ml1m_test" + str(kkk) + ".csv", header=None).values[:, 0:3]
+vad_csv = pd.read_csv("data/ex_ml1m_valid" + str(kkk) + ".csv", header=None).values[:, 0:3]
 train_csv = pd.read_csv("data/ex_ml1m_train" + str(kkk) + ".csv", header=None).values[:, 0:3]
-# vad_csv = pd.read_csv("data/ex_movie_test" + str(kkk) + ".csv", header=None).values[:, 0:3]
+# vad_csv = pd.read_csv("data/ex_movie_valid" + str(kkk) + ".csv", header=None).values[:, 0:3]
 # train_csv = pd.read_csv("data/ex_movie_train" + str(kkk) + ".csv", header=None).values[:, 0:3]
-# vad_csv = pd.read_csv("data/ex_yahoo_test" + str(kkk) + ".csv", header=None).values[:, 0:3]
+# vad_csv = pd.read_csv("data/ex_yahoo_valid" + str(kkk) + ".csv", header=None).values[:, 0:3]
 # train_csv = pd.read_csv("data/ex_yahoo_train" + str(kkk) + ".csv", header=None).values[:, 0:3]
 train_csv[:, 0:2] -= 1
 vad_csv[:, 0:2] -= 1
