@@ -383,17 +383,6 @@ class Params:
         self.ssl_ratio = args.ssl
 params = Params()
 
-# test_data = pd.read_csv("data/new5movie_test" + str(kkk) + ".csv", header=None).values[:, 0:2] - 1
-# train_data = pd.read_csv("data/new5movie_train" + str(kkk) + ".csv", header=None).values[:, 0:2] - 1
-# n_users, n_items = np.max(train_data, axis=0) + 1
-
-# test_data = pd.read_csv("data/ml-1m/pro_sg/test_te.csv", header=0).values[:, 0:2]
-# test_data_tr = pd.read_csv("data/ml-1m/pro_sg/test_tr.csv", header=0).values[:, 0:2]
-# train_data = pd.read_csv("data/ml-1m/pro_sg/train.csv", header=0).values[:, 0:2]
-# N = np.max(train_data[:, 0], axis=0) + 1
-# train_data = np.concatenate((train_data, test_data_tr), axis=0)
-# n_users, n_items = np.max(np.concatenate((train_data, test_data), axis=0), axis=0) + 1
-
 vad_csv = pd.read_csv("data/ex_ml1m_valid" + str(kkk) + ".csv", header=None).values[:, 0:3]
 train_csv = pd.read_csv("data/ex_ml1m_train" + str(kkk) + ".csv", header=None).values[:, 0:3]
 # vad_csv = pd.read_csv("data/ex_movie_valid" + str(kkk) + ".csv", header=None).values[:, 0:3]
@@ -423,7 +412,6 @@ max_len = 0
 pad_train = []
 pad_mask = []
 
-# 此处由于列表是排序后的，所以不需要再对字典的key排序,但为了防止不规则数据，还是做了排序，注意用户在训练集里不能有空的，否则序号对不上
 postrain = dict(sorted(postrain.items(), key=lambda x: x[0]))
 for li in postrain.values():
     if max_len < len(li):
